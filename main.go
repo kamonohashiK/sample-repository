@@ -3,5 +3,9 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println("Hello From VSCode!")
+	fmt.Println(Hello())
+}
+
+func Hello() string {
+	return "Hello World!"
 }
