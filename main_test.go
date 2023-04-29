@@ -10,3 +10,12 @@ func TestHello(t *testing.T) {
 		t.Errorf("Expected: %s, but got: %s", expected, actual)
 	}
 }
+
+func TestNewHello(t *testing.T) {
+	expected := "Hello New World!"
+	actual := NewHello()
+
+	if actual != expected {
+		t.Errorf("Expected: %s, but got: %s", expected, actual)
+	}
+}
