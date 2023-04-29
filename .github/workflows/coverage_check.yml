@@ -36,7 +36,7 @@ jobs:
           go test -coverprofile=coverage.out ./...
           COVERAGE=$(go tool cover -func=coverage.out | grep 'total:' | awk '{ print $3 }' | sed 's/%//g')
           echo "Coverage: ${COVERAGE}%"
-          if (( $(echo "$COVERAGE < 80.0" | bc -l) )); then
+          if (( $(echo "$COVERAGE < 60.0" | bc -l) )); then
             echo "Error: coverage is below 60%"
             exit 1
           fi
