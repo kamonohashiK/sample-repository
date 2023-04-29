@@ -1,0 +1,49 @@
+name: Coverage Check
+
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: set up
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.20
+        id: go
+      - name: check out
+        uses: actions/checkout@v2
+
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: build
+        run: go build ./...
+
+  test:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: test
+        run: go test -coverprofile=coverage.out ./...
+
+  check:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: test
+        run: |
+          COVERAGE=$(go tool cover -func=coverage.out | grep 'total:' | awk '{ print $3 }' | sed 's/%//g')
+          echo "Coverage: ${COVERAGE}%"
+          if (( $(echo "$COVERAGE < 80.0" | bc -l) )); then
+            echo "Error: coverage is below 60%"
+            exit 1
+          fi
