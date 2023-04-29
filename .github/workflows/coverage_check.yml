@@ -26,14 +26,6 @@ jobs:
       - name: build
         run: go build ./...
 
-  test:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: test
-        run: go test -coverprofile=coverage.out ./...
-
   check:
     needs: setup
     runs-on: ubuntu-latest
@@ -41,6 +33,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: test
         run: |
+          go test -coverprofile=coverage.out ./...
           COVERAGE=$(go tool cover -func=coverage.out | grep 'total:' | awk '{ print $3 }' | sed 's/%//g')
           echo "Coverage: ${COVERAGE}%"
           if (( $(echo "$COVERAGE < 80.0" | bc -l) )); then
