@@ -8,19 +8,19 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - id: checkout
+        name: Checkout repo
+        uses: actions/checkout@v2
 
-    - name: Authenticate with Google Cloud
-      uses: google-github-actions/auth@v0.4.0
-      with:
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with: #@FIXME: こっちの認証方法は古いらしい
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-    - name: Deploy to App Engine
-      if: github.event.pull_request.merged == true
-      run: |
-        gcloud components install app-engine-go
-        gcloud app deploy ./app.yaml --project ${{ secrets.GCP_PROJECT_ID }} --version develop --quiet
-      shell: bash
+      - id: 'deploy'
+        uses: 'google-github-actions/deploy-appengine@v1'
