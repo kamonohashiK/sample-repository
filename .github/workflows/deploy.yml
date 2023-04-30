@@ -13,6 +13,10 @@ jobs:
       id-token: 'write'
 
     steps:
+      - id: checkout
+        name: Checkout repo
+        uses: actions/checkout@v2
+
       - id: 'auth'
         uses: 'google-github-actions/auth@v1'
         with: #@FIXME: こっちの認証方法は古いらしい
@@ -20,9 +24,3 @@ jobs:
 
       - id: 'deploy'
         uses: 'google-github-actions/deploy-appengine@v1'
-        with:
-          deliverables: '../../app.yaml'
-
-      # Example of using the output
-      - id: 'test'
-        run: 'curl "${{ steps.deploy.outputs.url }}"'
