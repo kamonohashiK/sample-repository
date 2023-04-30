@@ -19,7 +19,6 @@ jobs:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
 
     - name: Deploy to App Engine
-      if: github.event.pull_request.merged == true
       run: |
         gcloud components install app-engine-go
         gcloud app deploy ./app.yaml --project ${{ secrets.GCP_PROJECT_ID }} --version develop --quiet
