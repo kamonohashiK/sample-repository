@@ -20,7 +20,7 @@ jobs:
 
     - name: Set up Google Cloud SDK
       run: |
-        echo "GOOGLE_CLOUD_PROJECT_ID=${{ secrets.GCP_SA_KEY }}" >> $GITHUB_ENV
+        echo "GOOGLE_CLOUD_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}" >> $GITHUB_ENV
         gcloud config set project $GOOGLE_CLOUD_PROJECT_ID
       shell: bash
 
