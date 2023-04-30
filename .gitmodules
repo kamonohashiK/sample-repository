@@ -1,0 +1,4 @@
+[submodule "wiki"]
+	path = wiki
+	url = https://github.com/kamonohashiK/sample-repository.wiki.git
+	ignore = dirty
