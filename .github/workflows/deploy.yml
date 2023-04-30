@@ -20,6 +20,8 @@ jobs:
 
       - id: 'deploy'
         uses: 'google-github-actions/deploy-appengine@v1'
+        with:
+          deliverables: '../../app.yaml'
 
       # Example of using the output
       - id: 'test'
