@@ -20,6 +20,7 @@ jobs:
 
     - name: Deploy to App Engine
       run: |
+        apt-get install google-cloud-sdk-app-engine-go
         gcloud components install app-engine-go
         gcloud app deploy ./app.yaml --project ${{ secrets.GCP_PROJECT_ID }} --version develop --quiet
       shell: bash
