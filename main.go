@@ -34,7 +34,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func Hello() string {
-	return "Hello World!"
+	return "Hello GAE!"
 }
 
 func NewHello() string {
