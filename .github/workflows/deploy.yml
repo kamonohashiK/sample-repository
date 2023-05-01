@@ -16,10 +16,6 @@ jobs:
       ENV_VAR: ${{ (github.event.pull_request.head.ref == 'master') ? 'prod' || 'dev' }}
 
     steps:
-      - id: 'test'
-        name: Test
-        run: echo "${{ env.ENV_VAR }}"
-
       - id: checkout
         name: Checkout repo
         uses: actions/checkout@v2
