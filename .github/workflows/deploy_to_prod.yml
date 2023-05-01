@@ -1,0 +1,32 @@
+name: Deploy to Production Environment
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - id: checkout
+        name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Generate timestamp
+        id: timestamp
+        run: echo "::set-output name=value::$(date +%Y%m%d-%H%M%S)"
+
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with: #@FIXME: こっちの認証方法は古いらしい
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - id: 'deploy'
+        uses: 'google-github-actions/deploy-appengine@v1'
+        with:
+          flags: '--version=prod-${{ steps.timestamp.outputs.value }}'
