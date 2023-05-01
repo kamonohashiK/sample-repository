@@ -1,0 +1,26 @@
+name: Deploy to App Engine
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - id: checkout
+        name: Checkout repo
+        uses: actions/checkout@v2
+
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with: #@FIXME: こっちの認証方法は古いらしい
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - id: 'deploy'
+        uses: 'google-github-actions/deploy-appengine@v1'
