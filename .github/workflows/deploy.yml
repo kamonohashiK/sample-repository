@@ -12,8 +12,18 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+
+    strategy:
+      matrix:
+        include:
+          - branch: master
+            branch_value: prod
+          - branch: develop
+            branch_value: dev
+
+    if: matrix.branch == github.event.pull_request.head.ref
     env:
-      BRANCH_VALUE: ${{ (github.event.pull_request.head.ref == 'master') && 'prod' || 'dev' }}
+      BRANCH_VALUE: ${{ matrix.branch_value }}
 
     steps:
       - id: checkout
