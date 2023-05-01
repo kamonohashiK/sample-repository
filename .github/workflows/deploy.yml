@@ -3,6 +3,7 @@ name: Deploy to App Engine
 on:
   pull_request:
     branches:
+      - master
       - develop
 
 jobs:
@@ -11,6 +12,8 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+    env:
+      ENV_VAR: ${{ (github.event.pull_request.head.ref == 'master') ? 'prod' || 'dev' }}
 
     steps:
       - id: checkout
@@ -24,3 +27,5 @@ jobs:
 
       - id: 'deploy'
         uses: 'google-github-actions/deploy-appengine@v1'
+        with:
+          flags: '--version=${{ env.ENV_VAR }}'
