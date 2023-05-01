@@ -21,14 +21,18 @@ jobs:
           - branch: develop
             branch_value: dev
 
-    if: matrix.branch == github.event.pull_request.head.ref
-    env:
-      BRANCH_VALUE: ${{ matrix.branch_value }}
-
     steps:
       - id: checkout
         name: Checkout repo
         uses: actions/checkout@v2
+
+      - name: Set branch value for master branch
+        if: github.event.pull_request.head.ref == 'master'
+        run: echo "BRANCH_VALUE=prod" >> $GITHUB_ENV
+
+      - name: Set branch value for develop branch
+        if: github.event.pull_request.head.ref == 'develop'
+        run: echo "BRANCH_VALUE=dev" >> $GITHUB_ENV
 
       - name: Generate timestamp
         id: timestamp
