@@ -13,12 +13,16 @@ jobs:
       contents: 'read'
       id-token: 'write'
     env:
-      ENV_VAR: ${{ (github.event.pull_request.head.ref == 'master') ? 'prod' || 'dev' }}
+      BRANCH_VALUE: ${{ (github.event.pull_request.head.ref == 'master') && 'prod' || 'dev' }}
 
     steps:
       - id: checkout
         name: Checkout repo
         uses: actions/checkout@v2
+
+      - name: Generate timestamp
+        id: timestamp
+        run: echo "::set-output name=value::$(date +%Y-%m-%d-%H-%M-%S)"
 
       - id: 'auth'
         uses: 'google-github-actions/auth@v1'
@@ -28,4 +32,4 @@ jobs:
       - id: 'deploy'
         uses: 'google-github-actions/deploy-appengine@v1'
         with:
-          flags: '--version=${{ env.ENV_VAR }}'
+          flags: '--version=${{ env.BRANCH_VALUE }}-${{ steps.timestamp.outputs.value }}'
