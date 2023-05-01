@@ -22,7 +22,7 @@ jobs:
 
       - name: Generate timestamp
         id: timestamp
-        run: echo "::set-output name=value::$(date +%Y-%m-%d-%H-%M-%S)"
+        run: echo "::set-output name=value::$(date +%Y%m%d-%H%M%S)"
 
       - id: 'auth'
         uses: 'google-github-actions/auth@v1'
