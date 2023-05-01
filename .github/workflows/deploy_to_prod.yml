@@ -1,10 +1,9 @@
-name: Deploy to App Engine
+name: Deploy to Dev Environment
 
 on:
   pull_request:
     branches:
       - master
-      - develop
 
 jobs:
   deploy:
@@ -13,26 +12,10 @@ jobs:
       contents: 'read'
       id-token: 'write'
 
-    strategy:
-      matrix:
-        include:
-          - branch: master
-            branch_value: prod
-          - branch: develop
-            branch_value: dev
-
     steps:
       - id: checkout
         name: Checkout repo
         uses: actions/checkout@v2
-
-      - name: Set branch value for master branch
-        if: github.event.pull_request.head.ref == 'master'
-        run: echo "BRANCH_VALUE=prod" >> $GITHUB_ENV
-
-      - name: Set branch value for develop branch
-        if: github.event.pull_request.head.ref == 'develop'
-        run: echo "BRANCH_VALUE=dev" >> $GITHUB_ENV
 
       - name: Generate timestamp
         id: timestamp
@@ -46,4 +29,4 @@ jobs:
       - id: 'deploy'
         uses: 'google-github-actions/deploy-appengine@v1'
         with:
-          flags: '--version=${{ env.BRANCH_VALUE }}-${{ steps.timestamp.outputs.value }}'
+          flags: '--version=prod-${{ steps.timestamp.outputs.value }}'
