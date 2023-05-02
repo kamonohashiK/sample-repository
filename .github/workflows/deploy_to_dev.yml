@@ -6,12 +6,8 @@ on:
       - develop
 
 jobs:
-  test:
+  setup:
     runs-on: ubuntu-latest
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
     steps:
       - name: set up
         uses: actions/setup-go@v2
@@ -23,6 +19,10 @@ jobs:
         name: Checkout repo
         uses: actions/checkout@v2
 
+  test:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
       - id: build
         name: build
         run: go build ./...
