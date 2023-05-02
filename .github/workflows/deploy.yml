@@ -58,7 +58,8 @@ jobs:
       - name: Set Variables
         id: set_variables
         run: |
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          BRANCH_NAME=${{ github.base_ref }}
+          echo $BRANCH_NAME
           if [[ "$BRANCH_NAME" == "master" ]]; then
             echo "VERSION_PREFIX=prod" >> $GITHUB_ENV
             echo "DELIVERABLES=app_prod.yaml" >> $GITHUB_ENV
