@@ -66,5 +66,5 @@ jobs:
       - id: 'deploy'
         uses: 'google-github-actions/deploy-appengine@v1'
         with:
-          deliverables: app_dev.yaml
+          deliverables: app_prod.yaml
           flags: '--version=prod-${{ steps.timestamp.outputs.value }} --no-promote'
