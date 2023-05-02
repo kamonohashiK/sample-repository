@@ -27,7 +27,7 @@ jobs:
         name: build
         run: go build ./...
 
-  check:
+  test:
     needs: build
     runs-on: ubuntu-latest
     steps:
