@@ -29,4 +29,4 @@ jobs:
       - id: 'deploy'
         uses: 'google-github-actions/deploy-appengine@v1'
         with:
-          flags: '--version=prod-${{ steps.timestamp.outputs.value }}'
+          flags: '-f app_prod.yaml --version=prod-${{ steps.timestamp.outputs.value }}'
