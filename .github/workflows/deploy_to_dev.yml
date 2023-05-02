@@ -48,8 +48,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TZ: Asia/Tokyo
-    if: needs.test.outputs.coverage_check == 'true'
+    needs: test
     steps:
+      - id: checkout
+        name: Checkout repo
+        uses: actions/checkout@v2
+
       - name: Generate timestamp
         id: timestamp
         run: echo "::set-output name=value::$(date +%Y%m%d-%H%M%S)"
