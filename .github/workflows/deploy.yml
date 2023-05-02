@@ -64,10 +64,13 @@ jobs:
             echo "VERSION_PREFIX=prod" >> $GITHUB_ENV
             echo "DELIVERABLES=app_prod.yaml" >> $GITHUB_ENV
             echo "DEV_OPTIONS= --no-promote" >> $GITHUB_ENV
-          else
+          elif [[  "$BRANCH_NAME" == "develop" ]]; then
             echo "VERSION_PREFIX=dev" >> $GITHUB_ENV
             echo "DELIVERABLES=app_dev.yaml" >> $GITHUB_ENV
             echo "DEV_OPTIONS=" >> $GITHUB_ENV
+          else
+            echo "Error: invalid branch name"
+            exit 1
           fi
 
       - name: Test Variables # Set Variablesの動作確認用
