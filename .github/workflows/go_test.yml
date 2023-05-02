@@ -2,7 +2,9 @@ name: Go Test
 
 on:
   push:
-  pull_request:
+    branches-ignore:
+      - master
+      - develop
 
 jobs:
   setup:
