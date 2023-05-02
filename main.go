@@ -34,7 +34,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func Hello() string {
-	return "Hello New Environment!"
+	return "これがデプロイされたらアウト"
 }
 
 func NewHello() string {
