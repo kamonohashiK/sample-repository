@@ -19,7 +19,7 @@ jobs:
         name: Checkout repo
         uses: actions/checkout@v2
 
-  test:
+  build:
     needs: setup
     runs-on: ubuntu-latest
     steps:
@@ -27,6 +27,11 @@ jobs:
         name: build
         run: go build ./...
 
+  check:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
       - name: Coverage Check
         id: coverage_check #@FIXME: デプロイの自動化の検証のため、一時的にカバレッジ閾値を変更
         run: |
