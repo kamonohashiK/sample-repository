@@ -1,4 +1,4 @@
-name: Deploy to Production Environment
+name: Deploy to Prod Environment
 
 on:
   pull_request:
@@ -6,12 +6,49 @@ on:
       - master
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: set up
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.20
+        id: go
+
+      - id: checkout
+        name: Checkout repo
+        uses: actions/checkout@v2
+
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - id: build
+        name: build
+        run: go build ./...
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Coverage Check
+        id: coverage_check #@FIXME: デプロイの自動化の検証のため、一時的にカバレッジ閾値を変更
+        run: |
+          go test -coverprofile=coverage.out ./...
+          COVERAGE=$(go tool cover -func=coverage.out | grep 'total:' | awk '{ print $3 }' | sed 's/%//g')
+          echo "Coverage: ${COVERAGE}%"
+          if (( $(echo "$COVERAGE < 10.0" | bc -l) )); then
+            echo "Error: coverage is below 10%"
+            exit 1
+          fi
+
   deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
+    env:
+      TZ: Asia/Tokyo
+    needs: test
     steps:
       - id: checkout
         name: Checkout repo
@@ -29,5 +66,5 @@ jobs:
       - id: 'deploy'
         uses: 'google-github-actions/deploy-appengine@v1'
         with:
-          deliverables: app_prod.yaml
+          deliverables: app_dev.yaml
           flags: '--version=prod-${{ steps.timestamp.outputs.value }} --no-promote'

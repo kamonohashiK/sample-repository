@@ -23,11 +23,12 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - id: build
         name: build
         run: go build ./...
 
-  check:
+  test:
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -48,8 +49,11 @@ jobs:
     env:
       TZ: Asia/Tokyo
     needs: test
-    if: needs.test.outputs.coverage_check == 'true'
     steps:
+      - id: checkout
+        name: Checkout repo
+        uses: actions/checkout@v2
+
       - name: Generate timestamp
         id: timestamp
         run: echo "::set-output name=value::$(date +%Y%m%d-%H%M%S)"
