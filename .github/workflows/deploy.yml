@@ -1,8 +1,9 @@
-name: Deploy to Dev Environment
+name: Deploy
 
 on:
   pull_request:
     branches:
+      - master
       - develop
 
 jobs:
@@ -54,6 +55,27 @@ jobs:
         name: Checkout repo
         uses: actions/checkout@v2
 
+      - name: Set Variables
+        id: set_variables
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          if [[ "$BRANCH_NAME" == "master" ]]; then
+            echo "VERSION_PREFIX=prod" >> $GITHUB_ENV
+            echo "DELIVERABLES=app_prod.yaml" >> $GITHUB_ENV
+            echo "DEV_OPTIONS= --no-promote" >> $GITHUB_ENV
+          else
+            echo "VERSION_PREFIX=dev" >> $GITHUB_ENV
+            echo "DELIVERABLES=app_dev.yaml" >> $GITHUB_ENV
+            echo "DEV_OPTIONS=" >> $GITHUB_ENV
+          fi
+
+      - name: Test Variables # Set Variablesの動作確認用
+        id: test_variables
+        run: |
+          echo $VERSION_PREFIX
+          echo $DELIVERABLES
+          echo $DEV_OPTIONS
+
       - name: Generate timestamp
         id: timestamp
         run: echo "::set-output name=value::$(date +%Y%m%d-%H%M%S)"
@@ -66,5 +88,5 @@ jobs:
       - id: 'deploy'
         uses: 'google-github-actions/deploy-appengine@v1'
         with:
-          deliverables: app_dev.yaml
-          flags: '--version=dev-${{ steps.timestamp.outputs.value }}'
+          deliverables: ${{ env.DELIVERABLES }}
+          flags: '--version=${{ env.VERSION_PREFIX }}-${{ steps.timestamp.outputs.value }}${{ env.DEV_OPTIONS }}'
