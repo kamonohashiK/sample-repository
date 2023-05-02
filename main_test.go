@@ -3,7 +3,7 @@ package main
 import "testing"
 
 func TestHello(t *testing.T) {
-	expected := "Hello App Engine!"
+	expected := "Hello New Environment!"
 	actual := Hello()
 
 	if actual != expected {
